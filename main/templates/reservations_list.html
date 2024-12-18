@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h3 class="center-align">My Reservations</h3>
+    <div class="row">
+        {% for reservation in reservations %}
+            <div class="col s12 m6 l4">
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <span class="card-title">{{ reservation.service.name }}</span>
+                        <p><strong>Reservation Date:</strong> {{ reservation.reservation_date }}</p>
+                        <p><strong>Reservation Time:</strong> {{ reservation.reservation_time }}</p>
+                        <p><strong>Status:</strong> {{ reservation.status }}</p>
+                        {% if reservation.feedback %}
+                            <p><strong>Feedback:</strong> {{ reservation.feedback.comment }}</p>
+                            <p><strong>Rating:</strong> {{ reservation.feedback.rating }}/5</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-action center-align">
+
+                        <form method="post" action="{% url 'delete_reservation' reservation.pk %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn red waves-effect waves-light">Delete</button>
+                        </form>
+
+                        <a href="{% url 'edit_reservation' reservation.pk %}" class="btn teal waves-effect waves-light">Edit</a>
+
+                        {% if reservation.status == 'Confirmed' and not reservation.feedback %}
+                            <a href="{% url 'create_feedback' reservation.pk %}" class="btn green waves-effect waves-light">LEAVE FEEDBACK</a>
+                        {% elif reservation.feedback %}
+                            <span class="btn grey waves-effect waves-light disabled">FEEDBACK SUBMITTED</span>
+                        {% else %}
+                            <span class="btn grey waves-effect waves-light disabled">NO FEEDBACK AVAILABLE</span>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="center-align">You have no reservations yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

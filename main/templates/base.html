@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation System</title>
+
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+
+    <!-- Google Fonts for Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'main/style.css' %}">
+</head>
+<body>
+    <nav>
+        <a href="{% url 'service_list' %}">Services</a> |
+        {% if user.is_authenticated %}
+            <a href="{% url 'reservations' %}">My Reservations</a> |
+            <a href="{% url 'update_profile' %}">Profile</a> |
+            <a href="#" onclick="document.getElementById('logout-form').submit();" style="color:white; ">Logout</a>
+            <form id="logout-form" method="post" action="{% url 'logout' %}" style="display:none;">
+                {% csrf_token %}
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a> |
+            <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+    </nav>
+    <hr>
+ <!-- Main Content -->
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+<footer style="position: fixed; bottom: 0; width: 100%; background-color: #333; color: white; text-align: center; padding: 10px 0;">
+        © 2024 Reservation System, SoftUni.
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var elems = document.querySelectorAll('select');
+        M.FormSelect.init(elems);
+
+        var dateElems = document.querySelectorAll('.datepicker');
+        M.Datepicker.init(dateElems, {
+            format: 'yyyy-mm-dd'
+        });
+
+        var timeElems = document.querySelectorAll('.timepicker');
+        M.Timepicker.init(timeElems, {
+            twelveHour: false
+        });
+    });
+    </script>
+
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
